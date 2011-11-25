@@ -1,0 +1,82 @@
+# Initial setup for authentication example
+
+# First the big structure
+
+create-graph example.auth
+
+create-node Users
+create-node Computers
+create-node Projects
+
+create-node Groups
+
+
+# then users
+
+create-node user.john
+add-property user.john name "John Doe" # value contains space -> use quotation marks
+add-property user.john username jdoe
+add-property user.john password 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8 
+
+create-node user.bob
+add-property user.bob name "Robert Walrus"
+add-property user.bob username rwal
+add-property user.bob password cbfdac6008f9cab4083784cbd1874f76618d2a97
+
+# lets make some relations
+
+connect-nodes Users user.john 1.0 # weight set to 1.0
+connect-nodes Users user.bob 1.0
+
+# computers
+
+create-node computer.pythagoras
+add-property computer.pythagoras ip 10.0.10.1
+
+create-node computer.anaximandros
+add-property computer.anaximandros ip 10.0.10.2
+
+connect-nodes Computers computer.pythagoras 1.0
+connect-nodes Computers computer.anaximandros 1.0
+
+# projects
+
+create-node project.p1
+add-property project.p1 name "Project 1"
+add-property project.p1 status "Almost finished"
+
+create-node project.p2
+add-property project.p2 name "Project 2"
+add-property project.p2 status "Neverending story"
+
+connect-nodes Projects project.p1 1.0
+connect-nodes Projects project.p2 1.0
+
+# groups
+
+create-node group.admin
+add-property group.admin desc "System administrators"
+
+create-node group.subc
+add-property group.subc desc "Subcontractors"
+
+connect-nodes Groups group.admin 1.0
+connect-nodes Groups group.subc 1.0
+
+
+# Robert is a sysadmin and John a subcontractor
+
+connect-nodes group.admin user.bob 1.0
+connect-nodes group.subc user.john 1.0
+
+
+# System adminstrators have access to both computers
+
+connect-nodes computer.pythagoras group.admin 1.0
+connect-nodes computer.anaximandros group.admin 1.0
+
+# Subcontractors have access only to anaximandros
+connect-nodes computer.anaximandros group.subc 1.0
+
+
+

@@ -1,0 +1,57 @@
+
+create-graph example.social.6degrees
+
+
+
+create-node person.A
+create-node person.B
+create-node person.C
+create-node person.D
+create-node person.E
+create-node person.F
+create-node person.G
+
+
+
+# A knows B and C
+# B knows C and D
+# C knows D and E
+# D knows E and F
+# E knows F and G
+# F knows G and A
+# G knows A and B
+
+connect-nodes person.A person.B 1.0
+connect-nodes person.A person.C 1.0
+
+connect-nodes person.B person.C 1.0
+connect-nodes person.B person.D 1.0
+
+connect-nodes person.C person.D 1.0
+connect-nodes person.C person.E 1.0
+
+connect-nodes person.D person.E 1.0
+connect-nodes person.D person.F 1.0
+
+connect-nodes person.E person.F 1.0
+connect-nodes person.E person.G 1.0
+
+connect-nodes person.F person.G 1.0
+connect-nodes person.F person.A 1.0
+
+connect-nodes person.G person.A 1.0
+connect-nodes person.G person.B 1.0
+
+
+# how through how many links A knows G?
+
+find-shortest-path r:A-to-G person.A person.G
+compute-path-length r:degrees r:A-to-G
+
+get-results r:degrees
+get-results r:A-to-G
+
+remove-results r:A-to-G
+remove-results r:degrees
+
+remove-graph example.social.6degrees

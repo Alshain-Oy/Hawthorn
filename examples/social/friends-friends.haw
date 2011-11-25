@@ -1,0 +1,65 @@
+
+
+create-graph example.social.fof
+
+
+create-node user.A
+create-node user.B
+create-node user.C
+create-node user.D
+create-node user.E
+
+
+# A is friend with B,D and E
+
+connect-nodes user.A user.B 1.0
+connect-nodes user.A user.D 1.0
+connect-nodes user.A user.E 1.0
+
+# B is friend with A and E
+
+connect-nodes user.B user.A 1.0
+connect-nodes user.B user.E 1.0
+
+# C is friend with D
+
+connect-nodes user.C user.D 1.0
+
+# D is friend with C and E
+
+connect-nodes user.D user.C 1.0
+connect-nodes user.D user.E 1.0
+
+# E is friend with A and B
+
+connect-nodes user.E user.A 1.0
+connect-nodes user.E user.B 1.0
+
+
+# task is to find friends of friends of A that are not A's friends
+
+get-node r:A:friends user.A
+get-children r:A:friends r:A:friends
+
+
+# friends of friends
+
+get-children r:fof r:A:friends
+
+complement r:not-friends r:A:friends r:fof
+
+get-results r:not-friends
+
+remove-results r:fof
+remove-results r:A:friends
+remove-results r:not-friends
+
+remove-graph example.social
+
+
+
+
+
+
+
+

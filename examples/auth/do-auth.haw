@@ -1,0 +1,39 @@
+# authentication example
+# check if credentials match and if has access to that computer
+
+
+select-graph example.auth
+
+get-node r:node Users
+get-children r:users r:node
+remove-results r:node
+get-results r:users
+
+filter-results r:filter r:users = username jdoe
+remove-results r:users
+
+get-results r:filter
+remove-results r:filter
+
+# credentials match with node "user.john"
+# he is trying to access computer with ip 10.0.10.1
+
+get-node r:node Computers
+get-children r:comps r:node
+remove-results r:node
+filter-results r:filter r:comps = ip 10.0.10.1
+remove-results r:comps
+get-results r:filter
+remove-results r:filter
+
+# matched with computer.pythagoras
+
+
+# now lets check if he has access to that computer 
+
+is-connected r:access computer.pythagoras user.john
+get-results r:access
+remove-results r:access
+
+# returned 0 (false), because there is no directed route from computer.pythagoras to user.john
+

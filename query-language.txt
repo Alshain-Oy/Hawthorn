@@ -1,0 +1,63 @@
+select-graph:
+	Synopsis: select-graph graph
+	
+	Selects a graph which all commands are executed against. 
+	This *must* be the first command in a query. 
+
+create-graph:
+	Synopsis: create-graph graph
+	
+	Creates a graph. All commands are executed against 
+	this unless a 'select-graph' command is used.
+	(--- deprecated--- works like select-graph )
+
+create-node:
+	Synopsis: create-node node
+	
+	Creates a node named 'node' into selected graph.
+
+connect-nodes:
+	Synopsis: connect-nodes node1 node2 weight
+	
+	Creates a directed edge from 'node1' to 'node2' with weight of 'weight'. 
+
+disconnect-nodes:
+	Synopsis: disconnect-nodes node1 node2
+	
+	Removes directed edge from 'node1' to 'node2'.
+
+get-node:
+	Synopsis: 
+
+get-results 
+
+add-property 
+
+get-property 
+
+is-connected 
+
+find-shortest-path 
+
+find-longest-path 
+
+find-nearest-nodes 
+
+compute-path-length 
+
+get-children
+
+get-parents 
+
+filter-results 
+
+union 
+
+intersection 
+
+complement 
+
+remove-node 
+
+remove-results
+
