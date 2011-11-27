@@ -48,53 +48,40 @@ std::pair<uint64_t,uint64_t> mask_hash( uint64_t H, size_t N ){
 		if( i < N ){
 			mask |= 0x03;
 			}
-		else{
+/*		else{
 			mask2 |= 0x03;
 			}
-		
+*/		
 		if( i < 31 ){
 			mask  <<= 0x02;
-			mask2 <<= 0x02;
+			//mask2 <<= 0x02;
 			}
 		}
 	
-	return std::make_pair( H & mask, (H & mask) | mask2 );
+	return std::make_pair( H & mask, (H & mask) | (~mask) );
 	
 	} 
 
-std::pair<double, double> compute_position( uint64_t H ){
+inline std::pair<double, double> compute_position( uint64_t H ){
 	double cx, cy, d;
-	uint64_t divisor = 1;
-	divisor <<= 32;
 
 	cx = 0.5;
 	cy = 0.5;
-	d = 0.25;//1.0 / divisor;
+	d = 0.25;
 	
 	for( uint64_t i = 0 ; i < 32 ; ++i ){
 		uint64_t p = 2*(31 - i);
 		uint64_t value = (H >> p) & 0x3;
-		uint64_t x,y;
+		int x,y;
 		x = value & 1;
-		y = value & 2;
+		y = (value & 2) >> 1;
 		
-		//std::cout << value << " ";
+		cx += (2*x-1)*d;
+		cy -= (2*y-1)*d;
 		
-		if( x > 0 ){
-			cx += d;
-			}
-		else{
-			cx -= d;
-			}
 		
-		if( y > 0 ){
-			cy -= d;
-			}
-		else{
-			cy += d;
-			}
 		
-		d /= 2.0;
+		d *= 0.5;
 		}
 	//std::cout << std::endl;
 	return std::make_pair( cx, cy );
@@ -129,7 +116,7 @@ std::vector< std::pair<uint64_t, uint64_t> > get_near_indices( uint64_t level, u
 	}
 
 
-double get_squared_distance( std::pair<double, double> A, std::pair<double, double> B ){
+double get_squared_distance( std::pair<double, double> &A, std::pair<double, double> &B ){
 	double dx, dy;
 	dx = A.first - B.first;
 	dy = A.second - B.second;
@@ -137,31 +124,32 @@ double get_squared_distance( std::pair<double, double> A, std::pair<double, doub
 	} 
 
 
-std::set< uint64_t > extract_points( std::set<uint64_t> & points, std::vector< std::pair<uint64_t, uint64_t> > areas ){
-	std::set<uint64_t> out;
+std::vector< uint64_t > extract_points( std::set<uint64_t> & points, std::vector< std::pair<uint64_t, uint64_t> > &areas ){
+	std::vector<uint64_t> out;
+	
 	for( size_t i = 0 ; i < areas.size() ; ++i ){
 		std::set<uint64_t>::iterator start, stop, it;
-		start = points.lower_bound( areas[i].first );
-		stop = points.upper_bound( areas[i].second );
+			start = points.lower_bound( areas[i].first );
+			stop = points.upper_bound( areas[i].second );
 		
-		for( it = start ; it != stop ; it++ ){
-			out.insert( *it );
-			}
-		
-		}
+			for( it = start ; it != stop ; it++ ){
+				out.push_back( *it );
+				}
+				}
 	
 	return out;
 	}
 
 
-std::set<uint64_t> filter_points( std::set< uint64_t > &keys, std::map<uint64_t, uint64_t> &values, std::pair<double, double> point, double radius ){
-	std::set<uint64_t> out;
+std::vector<uint64_t> filter_points( std::vector< uint64_t > &keys, std::map<uint64_t, uint64_t> &values, std::pair<double, double> point, double radius ){
+	std::vector<uint64_t> out;
+	std::pair<double, double> pos;
 	
 	radius = radius*radius;
-	for( std::set<uint64_t>::iterator it = keys.begin() ; it != keys.end() ; it++ ){
-		std::pair<double, double> pos = compute_position( *it );
+	for( size_t i = 0 ; i < keys.size() ; ++i ){
+		pos = compute_position( keys[i] );
 		if( get_squared_distance( pos, point ) <= radius ){
-			out.insert( values[ *it ] );
+			out.push_back( values[ keys[i] ] );
 			}
 		}
 	
