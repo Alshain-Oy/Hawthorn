@@ -14,7 +14,10 @@ create-node Groups
 # then users
 
 create-node user.john
-add-property user.john name "John Doe" # value contains space -> use quotation marks
+
+# value contains space -> use quotation marks
+
+add-property user.john name "John Doe"
 add-property user.john username jdoe
 add-property user.john password 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8 
 
