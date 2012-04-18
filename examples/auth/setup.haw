@@ -28,7 +28,9 @@ add-property user.bob password cbfdac6008f9cab4083784cbd1874f76618d2a97
 
 # lets make some relations
 
-connect-nodes Users user.john 1.0 # weight set to 1.0
+# weight set to 1.0
+
+connect-nodes Users user.john 1.0
 connect-nodes Users user.bob 1.0
 
 # computers
